@@ -7,36 +7,31 @@ services:
     image: gitea/gitea:1.26.4
     container_name: gitea
     restart: always
-    healthcheck:
-      test: ["CMD", "curl", "--fail", "http://localhost:3000/api/healthz"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
     networks:
       - gitea
     ports:
       - "127.0.0.1:10624:3000"
     environment:
-      # @see https://docs.gitea.com/zh-cn/installation/install-with-docker#环境变量
-      - APP_NAME=GitServer
-      - DISABLE_SSH=true
-      - DB_TYPE=sqlite3
-      - DISABLE_REGISTRATION=true # 禁用注册
-      - USER_UID=1000 # 容器内运行 Gitea 的用户的 UID/GID
-      - USER_GID=1000
-      # custom/conf/app.ini 中的任何设置都可以使用以下形式的环境变量进行设置或覆盖，容器启动时会应用以下配置
+      - APP_NAME=${APP_NAME}
+      - DB_TYPE=${DB_TYPE}
+      - DISABLE_SSH=${DISABLE_SSH}
+      - DISABLE_REGISTRATION=${DISABLE_REGISTRATION}
+      - USER_UID=${USER_UID:-1000}
+      - USER_GID=${USER_GID:-1000}
+
+      # 配置并覆盖 custom/conf/app.ini
       # GITEA__SECTION_NAME__KEY_NAME=value
-      - GITEA__openid__ENABLE_OPENID_SIGNIN=false
-      - GITEA__openid__ENABLE_OPENID_SIGNUP=false
-      - GITEA__i18n__LANGS=zh-CN
-      - GITEA__i18n__NAMES=简体中文
-      - GITEA__time__FORMAT=RFC1123
-      - GITEA__time__DEFAULT_UI_LOCATION=Asia/Shanghai # 默认时区
-      - GITEA__ui__DEFAULT_THEME=gitea
-      - GITEA__other__ENABLE_SITEMAP=true
-      - GITEA__other__ENABLE_FEED=true
-      - GITEA__server__LFS_START_SERVER=true           # 启用内置 git-lfs 支持
+      - GITEA__i18n__LANGS=${GITEA_I18N_LANGS}
+      - GITEA__i18n__NAMES=${GITEA_I18N_NAMES}
+      - GITEA__ui__DEFAULT_THEME=${GITEA_THEME}
+      - GITEA__time__FORMAT=${GITEA_TIME_FORMAT}
+      - GITEA__time__DEFAULT_UI_LOCATION=${GITEA_TIME_LOCATION}
+      - GITEA__server__ROOT_URL=${GITEA_ROOT_URL}
+      - GITEA__server__LFS_START_SERVER=${GITEA_ENABLE_LFS}
+      - GITEA__openid__ENABLE_OPENID_SIGNIN=${GITEA_ENABLE_OPENID_SIGNIN}
+      - GITEA__openid__ENABLE_OPENID_SIGNUP=${GITEA_ENABLE_OPENID_SIGNUP}
+      - GITEA__other__ENABLE_SITEMAP=${GITEA_ENABLE_SITEMAP}
+      - GITEA__other__ENABLE_FEED=${GITEA_ENABLE_FEED}
     volumes:
       - ./data:/data
       - /etc/timezone:/etc/timezone:ro
@@ -44,5 +39,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: "1.0"
-          memory: 512M
+          cpus: "${LIMITS_CPUS:-1.0}"
+          memory: "${LIMITS_MEMORY:-1024M}"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:3000/api/healthz"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
