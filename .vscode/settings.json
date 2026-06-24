@@ -1,0 +1,57 @@
+{
+  "[jsonc]": {
+  },
+  "[vue]": {
+    "editor.linkedEditing": true,
+    "editor.wordWrap": "on"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit",
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.markdownlint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.organizeImports": "never"
+  },
+  "editor.detectIndentation": false,
+  // 关闭编辑器自身的格式化功能
+  "editor.formatOnSave": false,
+  "editor.insertSpaces": true,
+  "editor.tabSize": 2,
+  // 开启 ESLint
+  "eslint.enable": true,
+  // 开启 ESLint 验证的文件类型
+  "eslint.validate": [
+    "astro",
+    "css",
+    "gql",
+    "graphql",
+    "html",
+    "javascript",
+    "javascriptreact",
+    "json",
+    "jsonc",
+    "less",
+    "markdown",
+    "pcss",
+    "plaintext",
+    "postcss",
+    "scss",
+    "svelte",
+    "toml",
+    "typescript",
+    "typescriptreact",
+    "vue",
+    "xml",
+    "yaml"
+  ],
+  "files.associations": {
+    "bun.lock": "plaintext"
+  },
+  "files.encoding": "utf8",
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimFinalNewlines": true,
+  "files.trimTrailingWhitespace": true,
+  "go.formatTool": "goimports",
+  "iconify.inplace": false
+}
